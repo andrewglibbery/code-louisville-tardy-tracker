@@ -18,7 +18,8 @@ function($scope, classes){
 			$scope.classes.push({
 				classPeriod: $scope.className,
 				students: [
-				{name: 'Alexa'}
+					{name: "Alexa", tardies: 0},
+					{name: "Albie", tardies: 3}
 				]
 			});
 		$scope.className = '';
@@ -39,7 +40,8 @@ function($scope, $stateParams, classes){
 		};
 
 		$scope.class.students.push({
-			name: $scope.studentName
+			name: $scope.studentName,
+			tardies: 0
 		});
 		$scope.studentName = '';
 	};
