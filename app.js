@@ -33,6 +33,16 @@ app.controller('ClassesCtrl', [
 function($scope, $stateParams, classes){
 	$scope.class = classes.classes[$stateParams.id];
 
+	$scope.addStudent = function(){
+		if($scope.studentName === '') {
+			return
+		};
+
+		$scope.class.students.push({
+			name: $scope.studentName
+		});
+		$scope.studentName = '';
+	};
 }]);
 
 app.config([

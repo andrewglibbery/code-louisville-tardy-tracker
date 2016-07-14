@@ -35,16 +35,26 @@
 
   <script type="text/ng-template" id="/classes.html">
     <div class="page-header">
-      <h3>
+      <h2>
           {{class.classPeriod}}
           Roster
-      </h3>
+      </h2>
     </div>
     <div ng-repeat="student in class.students">
       <span style="font-size:20px; margin-left:10px;">
         {{student.name}}
       </span>
     </div>
+    <form ng-submit="addStudent()" style="margin-top:30px;">
+      <h3>
+        Add a new student
+      </h3>
+
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="Student Name" ng-model="studentName"></input>
+      </div>
+      <button type="submit" class="btn btn-primary">Add</button>
+    </form>
   </script>
 </body>
 </html>
