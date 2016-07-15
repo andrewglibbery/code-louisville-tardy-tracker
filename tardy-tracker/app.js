@@ -9,6 +9,8 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var mongoose = require('mongoose');
+require('./models/Classes');
+require('./models/Students');
 
 mongoose.connect('mongodb://localhost/news');
 
