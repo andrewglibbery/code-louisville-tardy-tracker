@@ -21,14 +21,30 @@ router.get('/classes', function(req, res, next) {
   });
 });
 
-router.post('/classes', function(req, res, next) {
+router.post('/classes/', function(req, res, next) {
   var className = new Classes(req.body);
 
-  className.save(function(err, post){
+  className.save(function(err, classes){
     if(err){ return next(err); }
 
     res.json(className);
   });
+});
+
+router.param('classes', function(req, res, next, id) {
+  var query = Classes.findById(id);
+
+  query.exec(function (err, classes){
+    if (err) { return next(err); }
+    if (!classes) { return next(new Error('can\'t find this class')); }
+
+    req.classes = classes;
+    return next();
+  });
+});
+
+router.get('/classes/:classes', function(req, res) {
+  res.json(req.classes);
 });
 
 
