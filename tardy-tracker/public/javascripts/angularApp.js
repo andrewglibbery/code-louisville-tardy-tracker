@@ -1,8 +1,25 @@
 var app = angular.module('tardyTrackerApp', ['ui.router']);
 
-app.factory('classes', [function() {
+app.factory('classes', ['$http', function($http) {
 	var o = {
 		classes: []
+	};
+	 o.getAll = function() {
+	    return $http.get('/classes').success(function(data){
+	      angular.copy(data, o.classes);
+	    });
+	  };
+
+	 o.get = function(id) {
+	 	return $http.get('/classes/' + id).then(function(res){
+	 		return res.data;
+	 	});
+	 };
+
+	 o.create = function(newClass) {
+	  return $http.post('/classes', newClass).success(function(data){
+	    o.classes.push(data);
+	  });
 	};
 	return o;
 }]);
@@ -15,12 +32,12 @@ function($scope, classes){
 
 	$scope.addClass = function() {
 		if(!$scope.className || $scope.className === '') { return; };
-			$scope.classes.push({
+			classes.create({
 				classPeriod: $scope.className,
-				students: [
+				/*students: [
 					{name: "Alexa", tardies: 0},
 					{name: "Albie", tardies: 3}
-				]
+				]*/
 			});
 		$scope.className = '';
 	};
@@ -31,8 +48,9 @@ app.controller('ClassesCtrl', [
 '$scope',
 '$stateParams',
 'classes',
-function($scope, $stateParams, classes){
-	$scope.class = classes.classes[$stateParams.id];
+'classInfo',
+function($scope, $stateParams, classes, classInfo){
+	$scope.class = classInfo;
 
 	$scope.addStudent = function(){
 		if($scope.studentName === '') {
@@ -56,13 +74,23 @@ function($stateProvider, $urlRouterProvider) {
     .state('home', {
       url: '/home',
       templateUrl: '/home.html',
-      controller: 'MainCtrl'
+      controller: 'MainCtrl',
+      resolve: {
+      	classesPromise: ['classes', function(classes){
+      		return classes.getAll();
+      	}]
+      }
     })
 
     .state('classes', {
 	  url: '/classes/{id}',
 	  templateUrl: '/classes.html',
-	  controller: 'ClassesCtrl'
+	  controller: 'ClassesCtrl',
+	  resolve: {
+	    classInfo: ['$stateParams', 'classes', function($stateParams, classes) {
+	      return classes.get($stateParams.id);
+	    }]
+	  }
 	});
 
   $urlRouterProvider.otherwise('home');

@@ -43,8 +43,47 @@ router.param('classes', function(req, res, next, id) {
   });
 });
 
+router.param('students', function(req, res, next, id) {
+  var query = Students.findById(id);
+
+  query.exec(function (err, students){
+    if (err) { return next(err); }
+    if (!students) { return next(new Error('can\'t find this student')); }
+
+    req.students = students;
+    return next();
+  });
+});
+
 router.get('/classes/:classes', function(req, res) {
-  res.json(req.classes);
+  req.classes.populate('students', function(err, classes) {
+   res.json(req.classes); 
+ });
+});
+
+router.post('/classes/:classes/students', function(req, res, next) {
+  var student = new Students(req.body);
+  student.post = req.post;
+
+  student.save(function(err, student){
+    if(err){ return next(err); }
+
+    req.classes.students.push(student);
+    req.classes.save(function(err, classes) {
+      if(err){ return next(err); }
+
+      res.json(student);
+    });
+  });
+});
+
+
+router.put('/classes/:classes/students/:student/newTardy', function(req, res, next) {
+  req.students.newTardy(function(err, student){
+    if (err) { return next(err); }
+
+    res.json(student);
+  });
 });
 
 
