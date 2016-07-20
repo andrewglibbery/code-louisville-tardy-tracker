@@ -21,6 +21,11 @@ app.factory('classes', ['$http', function($http) {
 	    o.classes.push(data);
 	  });
 	};
+
+
+	o.addNewStudent = function(id, students) {
+		return $http.post('/classes/' + id + '/students', students);
+	};
 	return o;
 }]);
 
@@ -34,10 +39,10 @@ function($scope, classes){
 		if(!$scope.className || $scope.className === '') { return; };
 			classes.create({
 				classPeriod: $scope.className,
-				/*students: [
+				students: [
 					{name: "Alexa", tardies: 0},
 					{name: "Albie", tardies: 3}
-				]*/
+				]
 			});
 		$scope.className = '';
 	};
@@ -54,12 +59,13 @@ function($scope, $stateParams, classes, classInfo){
 
 	$scope.addStudent = function(){
 		if($scope.studentName === '') {
-			return
-		};
+			return};
 
-		$scope.class.students.push({
-			name: $scope.studentName,
-			tardies: 0
+		classes.addNewStudent(classes._id, {
+			studentName: $scope.studentName,
+			tardies: 0,
+		}).success(function(student) {
+			$scope.class.students.push(student)
 		});
 		$scope.studentName = '';
 	};
