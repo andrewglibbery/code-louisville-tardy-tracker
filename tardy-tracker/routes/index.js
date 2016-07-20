@@ -78,13 +78,13 @@ router.post('/classes/:classes/students', function(req, res, next) {
 });
 
 
-router.put('/classes/:classes/students/:student/newTardy', function(req, res, next) {
+/*router.put('/classes/:classes/students/:student/newTardy', function(req, res, next) {
   req.students.newTardy(function(err, student){
     if (err) { return next(err); }
 
     res.json(student);
   });
 });
-
+*/
 
 module.exports = router;
