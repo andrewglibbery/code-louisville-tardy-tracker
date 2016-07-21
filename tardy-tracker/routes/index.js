@@ -65,12 +65,14 @@ router.post('/classes/:classes/students', function(req, res, next) {
   var student = new Students(req.body);
   student.post = req.post;
 
+  req.classes.students.push(student);
+    req.classes.save(function(err, classes) {
+      if(err){ return next(err); }
+
   student.save(function(err, student){
     if(err){ return next(err); }
 
-    req.classes.students.push(student);
-    req.classes.save(function(err, classes) {
-      if(err){ return next(err); }
+    
 
       res.json(student);
     });
