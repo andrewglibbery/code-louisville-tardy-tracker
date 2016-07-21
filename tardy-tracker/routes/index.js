@@ -62,12 +62,14 @@ router.post('/classes/:classes/students', function(req, res, next) {
   var student = new Students(req.body);
   student.post = req.classes;
 
+  req.classes.students.push(student);
+    req.classes.save(function(err, classes) {
+      if(err){ return next(err); }
+
   student.save(function(err, student){
     if(err){ return next(err); }
 
-    req.classes.students.push(student);
-    req.classes.save(function(err, classes) {
-      if(err){ return next(err); }
+    
 
       res.json(student);
     });
@@ -80,13 +82,13 @@ router.put('/classes/:classes/newLate', function(req,res,next) {
   });
 });
 
-router.put('/classes/:classes/students/:student/newTardy', function(req, res, next) {
+/*router.put('/classes/:classes/students/:student/newTardy', function(req, res, next) {
   req.students.newTardy(function(err, student){
     if (err) { return next(err); }
 
     res.json(student);
   });
 });
-
+*/
 
 module.exports = router;
